@@ -1,4 +1,4 @@
-import { MatchBrief } from "./MatchBrief"
+import { MatchBrief } from "../Types/MatchBrief"
 
 enum EndGamePark {
   NONE, IN_WAREHOUSE, COMPLETELY_IN_WAREHOUSE

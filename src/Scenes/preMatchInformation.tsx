@@ -1,5 +1,5 @@
 import { FreightFrenzyMatchDetailed } from "../types/FreightFrenzyMatchDetailed";
-import { Ranking } from "../types/Ranking";
+import { Ranking } from "../Types/Ranking";
 
 const findTeamName = (rankingList: Ranking[], teamNumber: number) => {
   return rankingList[rankingList.findIndex((rank) => rank.team === teamNumber)]

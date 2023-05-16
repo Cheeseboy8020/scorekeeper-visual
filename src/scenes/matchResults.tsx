@@ -1,4 +1,4 @@
-import { MatchDetailed } from "../types/MatchDetailed";
+import { MatchDetailed } from "../Types/MatchDetailed";
 
 export default function MatchResults({
   activeMatchResults,

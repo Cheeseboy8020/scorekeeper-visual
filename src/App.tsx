@@ -1,21 +1,22 @@
 import { useState, useEffect } from "react";
-import PreMatchInformation from "./scenes/preMatchInformation";
-import Obs, { useObsWebSocket } from "./api/useObsWebSocket";
-import { useScoringSystemWebSocket } from "./api/useScoringSystemWebSocket";
-import { UpdateMessage } from "./types/UpdateMessage";
-import { Ranking } from "./types/Ranking";
+import PreMatchInformation from "./Scenes/preMatchInformation";
+import Obs, { useObsWebSocket } from "./Api/useObsWebSocket";
+import { useScoringSystemWebSocket } from "./Api/useScoringSystemWebSocket";
+import { UpdateMessage } from "./Types/UpdateMessage";
+import { Ranking } from "./Types/Ranking";
 import { FreightFrenzyMatchDetailed } from "./types/FreightFrenzyMatchDetailed";
-import Randomization from "./scenes/randomization";
-import { SceneOptions } from "./types/SceneOptions";
+import Randomization from "./Scenes/randomization";
+import { SceneOptions } from "./Types/SceneOptions";
 import MatchPlay from "./scenes/matchPlay";
 import MatchResults from "./scenes/matchResults";
 import { useInterval } from "./hooks/useInterval";
-import { MatchDetailed } from "./types/MatchDetailed";
+import { MatchDetailed } from "./Types/MatchDetailed";
 import { useTimer } from "react-timer-hook";
 
 export default function App() {
   //const SCORING_SYSTEM_IP = `${process.env.REACT_APP_SCORING_SYSTEM_IP}`;
   const SCORING_SYSTEM_IP = `localhost`;
+  const API_KEY = `JVKGUvXqwkNyJXlsQiEjihfZIFjGtQXI`;
   //const SCORING_SYSTEM_EVENT_CODE = `${process.env.REACT_APP_SCORING_SYSTEM_EVENT_CODE}`;
   const SCORING_SYSTEM_EVENT_CODE = `test`;
   const OBS_IP = `${process.env.REACT_APP_OBS_IP}`;
@@ -31,13 +32,19 @@ export default function App() {
   const { seconds, minutes, start, pause, resume, restart } = useTimer({
     expiryTimestamp,
   });
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", API_KEY);
+  const myInit = {
+    headers: myHeaders
+  };
+
 
   useEffect(() => {
     if (minutes === 2 && seconds === 0) {
       pause();
       setTimeout(() => {
         resume();
-      }, 8000);
+      }, 1000);
     }
   }, [seconds, minutes]);
 
@@ -48,7 +55,7 @@ export default function App() {
   useObsWebSocket(Obs, OBS_IP!, OBS_PASSWORD!);
   useInterval(() => {
     fetch(
-      `http://${SCORING_SYSTEM_IP}/api/2023/v1/events/${SCORING_SYSTEM_EVENT_CODE}/matches/${activeMatchNumber}/`
+      `http://${SCORING_SYSTEM_IP}/api/2023/v1/events/${SCORING_SYSTEM_EVENT_CODE}/matches/${activeMatchNumber}/`, myInit
     )
       .then((res) => res.json())
       .then(
@@ -65,7 +72,7 @@ export default function App() {
 
   useInterval(() => {
     fetch(
-      `http://${SCORING_SYSTEM_IP}/api/v1/events/${SCORING_SYSTEM_EVENT_CODE}/rankings/`
+      `http://${SCORING_SYSTEM_IP}/api/v1/events/${SCORING_SYSTEM_EVENT_CODE}/rankings/`, myInit
     )
       .then((res) => res.json())
       .then(
@@ -81,7 +88,7 @@ export default function App() {
 
   useEffect(() => {
     fetch(
-      `http://${SCORING_SYSTEM_IP}/api/v1/events/${SCORING_SYSTEM_EVENT_CODE}/rankings/`
+      `http://${SCORING_SYSTEM_IP}/api/v1/events/${SCORING_SYSTEM_EVENT_CODE}/rankings/`, myInit
     )
       .then((res) => res.json())
       .then(
@@ -146,7 +153,7 @@ export default function App() {
 
   const getMatchResults = () => {
     fetch(
-      `http://${SCORING_SYSTEM_IP}/api/v1/events/${SCORING_SYSTEM_EVENT_CODE}/matches/${activeMatchNumber}/`
+      `http://${SCORING_SYSTEM_IP}/api/v1/events/${SCORING_SYSTEM_EVENT_CODE}/matches/${activeMatchNumber}/`, myInit
     )
       .then((res) => res.json())
       .then(
@@ -159,7 +166,16 @@ export default function App() {
       );
   };
 
+  /*const key = () => {
+    fetch(
+        `http://${SCORING_SYSTEM_IP}/api/v1/keyrequest/?name=scorekeeper-visual`
+    )
+        .then(
+            (result) => {console.log("result", result.json())}
+        )
+  }*/
   const sceneDisplay = () => {
+    console.log("Scene", scene)
     switch (scene) {
       case "Randomization":
         return <Randomization randomization={randomization!} />;

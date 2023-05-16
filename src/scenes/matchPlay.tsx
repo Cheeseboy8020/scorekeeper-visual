@@ -17,7 +17,7 @@ import UnbalancedHub from "../svgs/unbalancedHub"
 import RedTipped from "../svgs/redTipped";
 import SharedHub from "../svgs/sharedHub";
 import BlueTipped from "../svgs/blueTipped";
-import { Ranking } from "../types/Ranking";
+import { Ranking } from "../Types/Ranking";
 
 const findTeamName = (rankingList: Ranking[], teamNumber: number) => {
   return rankingList[rankingList.findIndex((rank) => rank.team === teamNumber)]
